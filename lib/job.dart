@@ -1,15 +1,22 @@
 class Job {
-  final String id;
+  final int? id;
   final String title;
   final String description;
 
-  Job({required this.id, required this.title, required this.description});
+  Job({this.id, required this.title, required this.description});
 
   factory Job.fromJson(Map<String, dynamic> json) {
     return Job(
-      id: json['id'].toString(),
-      title: json['title'],
-      description: json['description']
-    );
+        id: json['id'],
+        title: json['title'],
+        description: json['description']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description
+    };
   }
 }

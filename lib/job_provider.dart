@@ -23,4 +23,21 @@ class JobProvider extends ChangeNotifier {
       throw Exception('Fallo la conexion');
     }
   }
+
+  Future<void> addJob(Job newJob) async {
+    final url =
+        Uri.parse('https://api-jobs-production.up.railway.app/api/jobs');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(newJob.toJson())
+    );
+    if (response.statusCode == 200) {
+      _jobs.add(newJob);
+      notifyListeners();
+    } 
+    else {
+      throw Exception('Registro no se agrego');
+    }
+  }
 }
