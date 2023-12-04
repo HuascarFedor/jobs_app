@@ -16,10 +16,15 @@ class HomePage extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
+                controller: jobProvider.jobScrollController,
                 itemCount: jobProvider.jobs.length,
                 itemBuilder: (context, index) {
                   final Job job = jobProvider.jobs[index];
-                  return Item(data: job);
+                  return Item(
+                    data: job,
+                    onDeletePressed: () => jobProvider.deleteJob(job.id!),
+                    onEditPressed: () => _editJob(job, context, jobProvider),
+                  );
                 }),
           ),
         ],
@@ -73,10 +78,70 @@ class HomePage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  jobProvider.addJob(Job(title: title,description: description));
+                  jobProvider
+                      .addJob(Job(title: title, description: description));
                   Navigator.of(context).pop();
                 },
                 child: const Text('Agregar'),
+              ),
+            ],
+          );
+        });
+  }
+
+  void _editJob(Job job, context, JobProvider jobProvider) {
+    final TextEditingController titleController =
+        TextEditingController(text: job.title);
+    final TextEditingController descriptionController =
+        TextEditingController(text: job.description);
+    showDialog(
+        context: context,
+        builder: (context) {
+          String title = job.title;
+          String description = job.description;
+          return AlertDialog(
+            title: const Text('Editar Trabajo'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    controller: titleController,
+                    onChanged: (value) {
+                      title = value;
+                    },
+                    decoration: const InputDecoration(labelText: 'Trabajo'),
+                  ),
+                ),
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    controller: descriptionController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    onChanged: (value) {
+                      description = value;
+                    },
+                    decoration: const InputDecoration(labelText: 'Descripción'),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  jobProvider.updateJob(
+                      Job(id: job.id, title: title, description: description));
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Actualizar'),
               ),
             ],
           );

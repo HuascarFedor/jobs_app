@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:jobs_app/job.dart';
 
 class Item extends StatelessWidget {
+  final VoidCallback onDeletePressed;
+  final VoidCallback onEditPressed;
   final Job data;
 
-  const Item({
-    super.key,
-    required this.data
-  });
+  const Item({super.key, required this.data, required this.onDeletePressed, required this.onEditPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +40,13 @@ class Item extends StatelessWidget {
               ],
             ),
           ),
-          const IconButton(
-            onPressed: null, 
-            icon:Icon(Icons.edit),
+          IconButton(
+            onPressed: onEditPressed,
+            icon: const Icon(Icons.edit),
           ),
-          const IconButton(
-            onPressed: null,
-            icon: Icon(Icons.delete),
+          IconButton(
+            onPressed: onDeletePressed,
+            icon: const Icon(Icons.delete),
           ),
         ],
       ),
